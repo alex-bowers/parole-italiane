@@ -1,0 +1,4 @@
+data/
+.wrangler/
+.pnpm-store/
+node_modules/

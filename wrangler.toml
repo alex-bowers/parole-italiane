@@ -1,0 +1,9 @@
+name = "parole-italiane"
+main = "src/worker.js"
+compatibility_date = "2026-08-10"
+
+# Create a KV namespace, then replace the placeholder below:
+#   npx wrangler kv namespace create VOCABULARY
+[[kv_namespaces]]
+binding = "VOCABULARY"
+id = "38705299f1eb4f1e8dbf67623b1bf0fa"
