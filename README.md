@@ -26,19 +26,27 @@ as static assets and routes `/api/*` requests to the Worker.
 - A Words deck, a Sentences deck, and a Mixed deck
 - An in-app form for adding your own words or sentences
 
-## Game modes
+## Practice activities
 
-| Mode | Prompt | Your task |
-| --- | --- | --- |
-| **Easy** | English | Choose the correct Italian answer from six options. |
-| **Normal** | Italian | Type the English translation. |
-| **Hard** | English | Type the Italian translation. |
+| Activity | Your task |
+| --- | --- |
+| **Multiple choice** | Choose the correct Italian translation. |
+| **Translation** | Type the Italian or English translation. |
+| **Listen and choose** | Hear Italian and choose the phrase that was spoken. |
+| **Listen and type** | Transcribe spoken Italian. |
+| **Pronunciation** | Say the displayed Italian and compare the recognised words. |
+| **Matching** | Match five English and Italian pairs. |
+| **Build a sentence** | Arrange Italian words to match an English sentence. |
 
 Typed answers are case-insensitive and accept Italian text without accents, so
 `perche` is accepted for `perché`. The app shows the correct answer after every
-attempt and reads it aloud in Italian using the browser's speech synthesis. It
-automatically advances after the pronunciation finishes for a correct answer.
-Browsers without speech synthesis continue without audio.
+attempt and reads Italian aloud using the browser's speech synthesis. Listening
+activities include normal and slower playback controls.
+
+Pronunciation practice uses the browser's speech recognition when it is
+available. Recognition checks the words that the browser heard; it does not
+grade accent quality. Browsers without speech recognition provide a
+listen-and-repeat fallback instead.
 
 ## Install on a phone
 

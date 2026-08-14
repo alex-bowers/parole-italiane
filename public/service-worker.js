@@ -1,8 +1,9 @@
-const CACHE = "parole-italiane-v2";
+const CACHE = "parole-italiane-v8";
 const APP_SHELL = [
   "/",
   "/styles.css",
   "/app.js",
+  "/learning.js",
   "/manifest.webmanifest",
   "/icons/icon-180.png",
   "/icons/icon-192.png",

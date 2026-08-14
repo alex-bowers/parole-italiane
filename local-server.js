@@ -14,6 +14,7 @@ const clean = (value) => String(value ?? "").trim().replace(/\s+/g, " ");
 const assets = new Map([
   ["/", { file: new URL("./public/index.html", import.meta.url), type: "text/html; charset=utf-8" }],
   ["/app.js", { file: new URL("./public/app.js", import.meta.url), type: "text/javascript; charset=utf-8" }],
+  ["/learning.js", { file: new URL("./public/learning.js", import.meta.url), type: "text/javascript; charset=utf-8" }],
   ["/styles.css", { file: new URL("./public/styles.css", import.meta.url), type: "text/css; charset=utf-8" }],
   ["/manifest.webmanifest", { file: new URL("./public/manifest.webmanifest", import.meta.url), type: "application/manifest+json; charset=utf-8" }],
   ["/service-worker.js", { file: new URL("./public/service-worker.js", import.meta.url), type: "text/javascript; charset=utf-8" }],
