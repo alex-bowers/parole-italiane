@@ -6,6 +6,9 @@ let answered = false;
 let nextTimer = null;
 let speechToken = 0;
 
+const WORDS_KEY = "parole-italiane.words";
+const QUEUE_KEY = "parole-italiane.additions";
+
 const $ = (selector) => document.querySelector(selector);
 const normalize = (value) => value
   .toLocaleLowerCase()
@@ -16,6 +19,56 @@ const normalize = (value) => value
 const pick = (items) => items[Math.floor(Math.random() * items.length)];
 const shuffle = (items) => [...items].sort(() => Math.random() - 0.5);
 const kind = (word) => word.type || "word";
+const readStored = (key, fallback) => {
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  } catch {
+    return fallback;
+  }
+};
+const saveWords = () => localStorage.setItem(WORDS_KEY, JSON.stringify(words));
+const readQueue = () => readStored(QUEUE_KEY, []);
+const saveQueue = (queue) => localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+
+async function syncAdditions() {
+  const queue = readQueue();
+  if (!queue.length || !navigator.onLine) return;
+
+  const remaining = [];
+  for (const addition of queue) {
+    try {
+      const response = await fetch("/api/words", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(addition),
+      });
+      const data = await response.json();
+
+      if (!response.ok && response.status !== 409) {
+        remaining.push(addition);
+        continue;
+      }
+
+      if (response.ok) {
+        const index = words.findIndex((word) => word.id === addition.localId);
+        if (index !== -1) words[index] = data.word;
+      } else {
+        words = words.filter((word) => word.id !== addition.localId);
+      }
+    } catch {
+      remaining.push(addition);
+    }
+  }
+
+  saveQueue(remaining);
+  saveWords();
+
+  if (!remaining.length) {
+    const note = $("#note");
+    note.textContent = "Offline additions synced.";
+    note.style.color = "var(--accent)";
+  }
+}
 
 function speakItalian(text, onDone) {
   if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
@@ -174,38 +227,62 @@ $("#add").onsubmit = async (event) => {
 
   const form = event.target;
   const note = $("#note");
-  note.textContent = "Saving…";
+  const addition = {
+    english: form.english.value.trim().replace(/\s+/g, " "),
+    italian: form.italian.value.trim().replace(/\s+/g, " "),
+    type: form.type.value === "sentence" ? "sentence" : "word",
+  };
 
-  const response = await fetch("/api/words", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      english: form.english.value,
-      italian: form.italian.value,
-      type: form.type.value,
-    }),
-  });
-  const data = await response.json();
-
-  if (!response.ok) {
-    note.textContent = data.error;
+  if (!addition.english || !addition.italian || addition.english.length > 80 || addition.italian.length > 80) {
+    note.textContent = "Add an English and Italian word (up to 80 characters each).";
     note.style.color = "var(--wrong)";
     return;
   }
 
-  words.push(data.word);
+  if (words.some((word) => normalize(word.english) === normalize(addition.english) && normalize(word.italian) === normalize(addition.italian))) {
+    note.textContent = "That translation is already in your list.";
+    note.style.color = "var(--wrong)";
+    return;
+  }
+
+  addition.localId = `local-${crypto.randomUUID()}`;
+  words.push({ ...addition, id: addition.localId });
+  saveWords();
+  saveQueue([...readQueue(), addition]);
   form.reset();
-  note.textContent = `Saved — ${data.word.english} → ${data.word.italian}`;
+  note.textContent = navigator.onLine ? "Saving…" : "Saved on this device — it will sync when you are online.";
   note.style.color = "var(--accent)";
+  await syncAdditions();
 };
 
-fetch("/api/words")
-  .then((response) => response.json())
-  .then((data) => {
-    words = data.words;
+async function loadWords() {
+  const stored = readStored(WORDS_KEY, []);
+  if (stored.length) {
+    words = stored;
     next();
-  })
-  .catch(() => {
-    $("#question").textContent = "Could not load words";
-    $("#play").innerHTML = "<p>Check your Cloudflare KV binding and refresh.</p>";
-  });
+  }
+
+  try {
+    const response = await fetch("/api/words");
+    if (!response.ok) throw new Error("Could not load words");
+    const data = await response.json();
+    const pending = readQueue().map((addition) => ({ ...addition, id: addition.localId }));
+    words = [...data.words, ...pending.filter((item) => !data.words.some((word) => normalize(word.english) === normalize(item.english) && normalize(word.italian) === normalize(item.italian)))];
+    saveWords();
+    next();
+    await syncAdditions();
+  } catch {
+    if (!stored.length) {
+      $("#question").textContent = "You are offline";
+      $("#play").innerHTML = "<p>Connect once to download your vocabulary for offline use.</p>";
+    }
+  }
+}
+
+window.addEventListener("online", syncAdditions);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js"));
+}
+
+loadWords();

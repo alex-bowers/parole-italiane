@@ -4,6 +4,10 @@ Parole italiane is a dependency-free Italian vocabulary game. It runs as a
 Cloudflare Worker with Workers KV for saved vocabulary, or as a local Node.js
 server when you want to practise without deploying.
 
+The interface is an installable Progressive Web App (PWA). After one online
+visit, it can open and run offline. Vocabulary additions made offline remain on
+the device and synchronise with Workers KV when the connection returns.
+
 ## Project structure
 
 The browser interface uses three static files:
@@ -35,6 +39,12 @@ Typed answers are case-insensitive and accept Italian text without accents, so
 attempt and reads it aloud in Italian using the browser's speech synthesis. It
 automatically advances after the pronunciation finishes for a correct answer.
 Browsers without speech synthesis continue without audio.
+
+## Install on a phone
+
+Deploy the app, open its HTTPS address in your phone's browser, then use the
+browser's **Add to Home Screen** or **Install app** command. Visit the app once
+while online before relying on offline mode.
 
 ## Run locally
 
