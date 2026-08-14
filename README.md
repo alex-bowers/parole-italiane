@@ -21,7 +21,9 @@ server when you want to practise without deploying.
 
 Typed answers are case-insensitive and accept Italian text without accents, so
 `perche` is accepted for `perché`. The app shows the correct answer after every
-attempt, then automatically advances after a correct answer.
+attempt and reads it aloud in Italian using the browser's speech synthesis. It
+automatically advances after the pronunciation finishes for a correct answer.
+Browsers without speech synthesis continue without audio.
 
 ## Run locally
 
