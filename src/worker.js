@@ -1,4 +1,3 @@
-import { app } from "./app.js";
 import { seedWords } from "./words.js";
 
 const json = (body, status = 200) => new Response(JSON.stringify(body), {
@@ -44,6 +43,6 @@ export default {
       await env.VOCABULARY.put("words", JSON.stringify(list));
       return json({ word: item }, 201);
     }
-    return new Response(app, { headers: { "content-type": "text/html; charset=utf-8" } });
+    return new Response("Not found", { status: 404 });
   }
 };

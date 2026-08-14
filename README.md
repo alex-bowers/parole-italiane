@@ -4,6 +4,17 @@ Parole italiane is a dependency-free Italian vocabulary game. It runs as a
 Cloudflare Worker with Workers KV for saved vocabulary, or as a local Node.js
 server when you want to practise without deploying.
 
+## Project structure
+
+The browser interface uses three static files:
+
+- `public/index.html` contains the page markup.
+- `public/styles.css` contains the page styles.
+- `public/app.js` contains the game behaviour.
+
+The Worker API is in `src/worker.js`. Wrangler deploys the `public` directory
+as static assets and routes `/api/*` requests to the Worker.
+
 ## Included learning content
 
 - 100 everyday Italian words

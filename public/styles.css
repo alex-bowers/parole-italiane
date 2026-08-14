@@ -1,0 +1,277 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b0f0d;
+  --card: #141a17;
+  --line: #68716b;
+  --text: #f7f4ec;
+  --muted: #b8bdb7;
+  --accent: #63d68b;
+  --action: #e36b5d;
+  --action-hover: #f08a78;
+  --action-text: #0b0f0d;
+  --wrong: #ff9c94;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: radial-gradient(circle at 50% -20%, #243a2a 0, #0b0f0d 40%);
+  color: var(--text);
+  font: 500 16px/1.4 Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+main {
+  max-width: 720px;
+  margin: auto;
+  padding: 48px 20px;
+}
+
+.brand {
+  margin: 0 0 26px;
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+.brand i {
+  color: var(--accent);
+  font-style: normal;
+}
+
+p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.mode,
+.deck {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.mode {
+  margin: 0 0 10px;
+}
+
+.deck {
+  margin: 0 0 18px;
+}
+
+.mode button,
+.deck button,
+.option,
+form button {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #111613;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.mode button,
+.deck button {
+  padding: 14px;
+  font-weight: 800;
+}
+
+.deck button {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.mode button.active,
+.deck button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #07130d;
+}
+
+.card {
+  min-height: 330px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--card) 90%, transparent);
+}
+
+.label {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.question {
+  margin: 30px 0;
+  font-size: clamp(34px, 7vw, 51px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.option {
+  padding: 15px;
+  font-weight: 750;
+  text-align: left;
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: #1a211d;
+}
+
+button.correct {
+  border-color: var(--accent);
+  background: #1d432c;
+}
+
+button.incorrect {
+  border-color: var(--wrong);
+  background: #5b282a;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+.answer {
+  display: flex;
+  gap: 8px;
+}
+
+.answer input {
+  min-width: 0;
+  flex: 1;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #0e1310;
+  color: var(--text);
+  font: 700 17px inherit;
+}
+
+.answer input:focus {
+  border-color: transparent;
+  outline: 2px solid var(--accent);
+}
+
+.answer button,
+form button,
+.next {
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--action-text);
+  font-weight: 850;
+}
+
+.answer button,
+form button {
+  padding: 0 19px;
+}
+
+.answer button:hover:not(:disabled),
+form button:hover:not(:disabled),
+.next:hover {
+  border-color: var(--action-hover);
+  background: var(--action-hover);
+}
+
+.feedback {
+  height: 26px;
+  margin: 18px 0 0;
+  font-weight: 700;
+}
+
+.feedback.good {
+  color: var(--accent);
+}
+
+.feedback.bad {
+  color: var(--wrong);
+}
+
+.next {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 0 auto;
+  padding: 12px 16px;
+  border-radius: 13px;
+  cursor: pointer;
+}
+
+.next[hidden] {
+  display: none;
+}
+
+.manage {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.manage summary {
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.manage p {
+  margin: 8px 0 14px;
+  font-size: 14px;
+}
+
+.add {
+  display: grid;
+  grid-template-columns: 1fr 1fr 120px auto;
+  gap: 8px;
+}
+
+.add input,
+.add select {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0e1310;
+  color: var(--text);
+  font: inherit;
+}
+
+.note {
+  min-height: 19px;
+  margin-top: 9px;
+  font-size: 13px;
+}
+
+@media (max-width: 520px) {
+  main {
+    padding-top: 28px;
+  }
+
+  .card {
+    padding: 22px;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+
+  .add {
+    grid-template-columns: 1fr;
+  }
+
+  .add button {
+    padding: 12px;
+  }
+}

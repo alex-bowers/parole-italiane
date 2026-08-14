@@ -2,7 +2,6 @@ import { createServer } from "node:http";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { app } from "./src/app.js";
 import { seedWords } from "./src/words.js";
 
 const host = process.env.HOST ?? "0.0.0.0";
@@ -12,6 +11,11 @@ const store = process.env.DATA_FILE
   : new URL("./data/words.json", import.meta.url);
 
 const clean = (value) => String(value ?? "").trim().replace(/\s+/g, " ");
+const assets = new Map([
+  ["/", { file: new URL("./public/index.html", import.meta.url), type: "text/html; charset=utf-8" }],
+  ["/app.js", { file: new URL("./public/app.js", import.meta.url), type: "text/javascript; charset=utf-8" }],
+  ["/styles.css", { file: new URL("./public/styles.css", import.meta.url), type: "text/css; charset=utf-8" }],
+]);
 const send = (response, status, body) => {
   response.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
   response.end(JSON.stringify(body));
@@ -35,6 +39,11 @@ async function words() {
 
 createServer(async (request, response) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
+  const asset = request.method === "GET" ? assets.get(url.pathname) : null;
+  if (asset) {
+    response.writeHead(200, { "content-type": asset.type });
+    return response.end(await readFile(asset.file));
+  }
   if (url.pathname === "/api/words" && request.method === "GET") return send(response, 200, { words: await words() });
   if (url.pathname === "/api/words" && request.method === "POST") {
     let raw = "";
@@ -49,10 +58,6 @@ createServer(async (request, response) => {
     list.push(item);
     await writeFile(store, JSON.stringify(list, null, 2));
     return send(response, 201, { word: item });
-  }
-  if (url.pathname === "/" && request.method === "GET") {
-    response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    return response.end(app);
   }
   response.writeHead(404); response.end("Not found");
 }).listen(port, host, () => console.log(`Parole italiane local preview: http://localhost:${port}`));
