@@ -26,6 +26,25 @@ const readStored = (key, fallback) => {
 const saveWords = () => localStorage.setItem(WORDS_KEY, JSON.stringify(words));
 const readQueue = () => readStored(QUEUE_KEY, []);
 const saveQueue = (queue) => localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
+const activityTitles = {
+  choice: "Multiple choice",
+  translate: "Translation",
+  "listen-choice": "Listen & choose",
+  dictation: "Listen & type",
+  pronunciation: "Pronunciation",
+  matching: "Matching",
+  "sentence-builder": "Build a sentence",
+};
+
+function showScreen(screen, title = "Parole italiane") {
+  stopMedia();
+  $("#menu-screen").hidden = screen !== "menu";
+  $("#game-screen").hidden = screen !== "game";
+  $("#add-screen").hidden = screen !== "add";
+  $("#back").hidden = screen === "menu";
+  $("#page-title").innerHTML = screen === "menu" ? "Parole <i>italiane</i>" : escapeHtml(title);
+  document.title = screen === "menu" ? "Parole italiane" : `${title} · Parole italiane`;
+}
 
 function showNote(message, good = false) {
   $("#note").textContent = message;
@@ -369,7 +388,6 @@ const activities = {
 };
 
 function updateControls() {
-  document.querySelectorAll("[data-activity]").forEach((button) => button.classList.toggle("active", button.dataset.activity === activity));
   document.querySelectorAll("[data-deck]").forEach((button) => {
     button.disabled = activity === "sentence-builder" && button.dataset.deck !== "sentence";
     button.classList.toggle("active", button.dataset.deck === deck);
@@ -396,6 +414,7 @@ document.querySelectorAll("[data-activity]").forEach((button) => {
   button.onclick = () => {
     activity = button.dataset.activity;
     if (activity === "sentence-builder") deck = "sentence";
+    showScreen("game", activityTitles[activity]);
     next();
   };
 });
@@ -411,6 +430,8 @@ document.querySelectorAll("[data-direction]").forEach((button) => {
 });
 
 $("#next").onclick = next;
+$("#show-add").onclick = () => showScreen("add", "Add words");
+$("#back").onclick = () => showScreen("menu");
 $("#add").onsubmit = async (event) => {
   event.preventDefault();
   const form = event.target;

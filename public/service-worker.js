@@ -1,4 +1,4 @@
-const CACHE = "parole-italiane-v8";
+const CACHE = "parole-italiane-v10";
 const APP_SHELL = [
   "/",
   "/styles.css",
