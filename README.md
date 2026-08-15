@@ -78,21 +78,27 @@ Wrangler is included as a project development dependency.
    pnpm install
    ```
 
-2. Create a KV namespace:
-
-   ```sh
-   pnpm wrangler kv namespace create VOCABULARY
-   ```
-
-3. Copy the namespace ID printed by that command into `wrangler.toml`, replacing
-   `REPLACE_WITH_YOUR_KV_NAMESPACE_ID`.
-
-4. Sign in and deploy:
+2. Sign in to Cloudflare:
 
    ```sh
    pnpm wrangler login
+   ```
+
+3. Deploy the Worker:
+
+   ```sh
    pnpm run deploy
    ```
+
+Wrangler automatically creates a KV namespace in your Cloudflare account and
+binds it to the Worker as `VOCABULARY`. You do not need to create the namespace
+or add an account-specific namespace ID to `wrangler.toml`.
+
+After the first deployment, Wrangler may add the generated namespace ID to your
+local `wrangler.toml`. Do not commit that ID. The deployed Worker remains linked
+to the namespace when the public configuration contains only the binding name.
+Each person who deploys a clone receives a namespace in their own Cloudflare
+account.
 
 The first visit creates the starter list in KV. Later starter-list updates add
 missing built-in entries without removing any words or sentences you added.

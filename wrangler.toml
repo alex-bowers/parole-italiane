@@ -6,8 +6,6 @@ compatibility_date = "2026-08-10"
 directory = "./public"
 run_worker_first = ["/api/*"]
 
-# Create a KV namespace, then replace the placeholder below:
-#   npx wrangler kv namespace create VOCABULARY
+# Wrangler provisions and binds an account-specific KV namespace on deployment.
 [[kv_namespaces]]
 binding = "VOCABULARY"
-id = "38705299f1eb4f1e8dbf67623b1bf0fa"
