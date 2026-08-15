@@ -117,12 +117,17 @@ form button {
   text-align: center;
 }
 
-.activity-picker button span {
+.activity-picker button svg {
   display: block;
-  margin-bottom: 4px;
+  width: 24px;
+  height: 24px;
+  margin: 0 auto 1rem;
   color: var(--accent);
-  font-size: 20px;
-  text-align: center;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .control-label {
@@ -154,7 +159,7 @@ form button {
   color: #07130d;
 }
 
-.activity-picker button:hover span {
+.activity-picker button:hover svg {
   color: #07130d;
 }
 
@@ -429,7 +434,23 @@ form button:hover:not(:disabled),
 
 @media (max-width: 520px) {
   main {
-    padding-top: 28px;
+    display: flex;
+    min-height: 100vh;
+    min-height: 100dvh;
+    flex-direction: column;
+    padding-top: max(28px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  #menu-screen {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  #menu-screen[hidden] {
+    display: none;
   }
 
   .card {
@@ -441,7 +462,11 @@ form button:hover:not(:disabled),
   }
 
   .activity-picker {
+    grid-template-rows: repeat(4, minmax(72px, 1fr));
     grid-template-columns: 1fr 1fr;
+    min-height: 0;
+    flex: 1;
+    margin-bottom: 0;
   }
 
   .add {
