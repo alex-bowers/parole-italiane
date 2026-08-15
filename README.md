@@ -54,6 +54,8 @@ Deploy the app, open its HTTPS address in your phone's browser, then use the
 browser's **Add to Home Screen** or **Install app** command. Visit the app once
 while online before relying on offline mode.
 
+[![Image from Gyazo](https://i.gyazo.com/a969ace8d32ff4a8fc8c576982ee90ef.png)](https://gyazo.com/a969ace8d32ff4a8fc8c576982ee90ef)
+
 ## Run locally
 
 Requirements: Node.js 18 or newer and pnpm 11 or newer. You do not need to
