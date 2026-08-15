@@ -433,10 +433,13 @@ form button:hover:not(:disabled),
 }
 
 @media (max-width: 520px) {
+  body {
+    min-height: 100dvh;
+  }
+
   main {
     display: flex;
-    min-height: 100vh;
-    min-height: 100dvh;
+    height: 100dvh;
     flex-direction: column;
     padding-top: max(28px, env(safe-area-inset-top));
     padding-bottom: max(20px, env(safe-area-inset-bottom));
@@ -462,11 +465,15 @@ form button:hover:not(:disabled),
   }
 
   .activity-picker {
-    grid-template-rows: repeat(4, minmax(72px, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
     grid-template-columns: 1fr 1fr;
     min-height: 0;
     flex: 1;
     margin-bottom: 0;
+  }
+
+  .activity-picker button {
+    min-height: 0;
   }
 
   .add {
