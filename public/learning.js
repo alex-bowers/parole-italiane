@@ -42,11 +42,13 @@ export function joinTokens(tokens) {
 }
 
 export function buildSentenceOptions(sentence, otherSentences, random = Math.random) {
-  const correct = tokenizeSentence(sentence).map((text, index) => ({
-    id: `correct-${index}`,
-    text,
-    correct: true,
-  }));
+  const correct = tokenizeSentence(sentence)
+    .filter((text) => /[\p{L}\p{N}]/u.test(text))
+    .map((text, index) => ({
+      id: `correct-${index}`,
+      text,
+      correct: true,
+    }));
   const answerWords = new Set(correct.map((token) => normalize(token.text)).filter(Boolean));
   const seen = new Set(answerWords);
   const candidates = shuffle(otherSentences.flatMap(tokenizeSentence), random).filter((text) => {
@@ -56,8 +58,7 @@ export function buildSentenceOptions(sentence, otherSentences, random = Math.ran
     seen.add(key);
     return true;
   });
-  const wordCount = correct.filter((token) => /[\p{L}\p{N}]/u.test(token.text)).length;
-  const distractors = candidates.slice(0, wordCount).map((text, index) => ({
+  const distractors = candidates.slice(0, correct.length).map((text, index) => ({
     id: `distractor-${index}`,
     text,
     correct: false,

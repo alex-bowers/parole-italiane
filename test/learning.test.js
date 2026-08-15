@@ -54,6 +54,17 @@ test("sentence options add an equal number of unique wrong words", () => {
   assert.ok(distractors.every((token) => /[\p{L}\p{N}]/u.test(token.text)));
 });
 
+test("sentence options omit punctuation", () => {
+  const options = buildSentenceOptions(
+    "Dov'è l'acqua? Sì!",
+    ["Io bevo acqua."],
+    () => 0.5,
+  );
+  const correct = options.filter((token) => token.correct).map((token) => token.text);
+  assert.deepEqual(correct.sort(), ["Dov'è", "Sì", "l'acqua"].sort());
+  assert.ok(options.every((token) => /[\p{L}\p{N}]/u.test(token.text)));
+});
+
 test("transcript matching uses normalised text", () => {
   assert.equal(transcriptMatches("Perche?", "perché"), true);
   assert.equal(transcriptMatches("buona sera", "buongiorno"), false);

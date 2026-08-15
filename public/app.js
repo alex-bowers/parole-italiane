@@ -9,6 +9,7 @@ let answered = false;
 let nextTimer = null;
 let speechToken = 0;
 let recognition = null;
+let currentScreen = "menu";
 
 const WORDS_KEY = "parole-italiane.words";
 const QUEUE_KEY = "parole-italiane.additions";
@@ -37,6 +38,7 @@ const activityTitles = {
 };
 
 function showScreen(screen, title = "Parole italiane") {
+  currentScreen = screen;
   stopMedia();
   $("#menu-screen").hidden = screen !== "menu";
   $("#game-screen").hidden = screen !== "game";
@@ -44,6 +46,19 @@ function showScreen(screen, title = "Parole italiane") {
   $("#back").hidden = screen === "menu";
   $("#page-title").innerHTML = screen === "menu" ? "Parole <i>italiane</i>" : escapeHtml(title);
   document.title = screen === "menu" ? "Parole italiane" : `${title} · Parole italiane`;
+}
+
+function navigateTo(screen, title, state = {}) {
+  history.pushState({ screen, title, ...state }, "");
+  showScreen(screen, title);
+}
+
+function returnToMenu() {
+  if (currentScreen !== "menu" && history.state?.screen !== "menu") {
+    history.back();
+    return;
+  }
+  showScreen("menu");
 }
 
 function showNote(message, good = false) {
@@ -414,7 +429,7 @@ document.querySelectorAll("[data-activity]").forEach((button) => {
   button.onclick = () => {
     activity = button.dataset.activity;
     if (activity === "sentence-builder") deck = "sentence";
-    showScreen("game", activityTitles[activity]);
+    navigateTo("game", activityTitles[activity], { activity });
     next();
   };
 });
@@ -430,8 +445,8 @@ document.querySelectorAll("[data-direction]").forEach((button) => {
 });
 
 $("#next").onclick = next;
-$("#show-add").onclick = () => showScreen("add", "Add words");
-$("#back").onclick = () => showScreen("menu");
+$("#show-add").onclick = () => navigateTo("add", "Add words");
+$("#back").onclick = returnToMenu;
 $("#add").onsubmit = async (event) => {
   event.preventDefault();
   const form = event.target;
@@ -478,5 +493,21 @@ async function loadWords() {
 }
 
 window.addEventListener("online", syncAdditions);
+window.addEventListener("popstate", (event) => {
+  const state = event.state;
+  if (state?.screen === "game" && activities[state.activity]) {
+    activity = state.activity;
+    if (activity === "sentence-builder") deck = "sentence";
+    showScreen("game", activityTitles[activity]);
+    next();
+    return;
+  }
+  if (state?.screen === "add") {
+    showScreen("add", "Add words");
+    return;
+  }
+  showScreen("menu");
+});
+history.replaceState({ screen: "menu" }, "");
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js"));
 loadWords();
