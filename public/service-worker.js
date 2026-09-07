@@ -1,4 +1,4 @@
-const CACHE = "parole-italiane-v12";
+const CACHE = "parole-italiane-v13";
 const APP_SHELL = [
   "/",
   "/styles.css",
@@ -7,7 +7,7 @@ const APP_SHELL = [
   "/manifest.webmanifest",
   "/icons/icon-180.png",
   "/icons/icon-192.png",
-  "/icons/icon-512.png",
+  "/brand/wolf-logo.png",
 ];
 
 self.addEventListener("install", (event) => {
