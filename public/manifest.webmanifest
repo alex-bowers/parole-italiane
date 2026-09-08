@@ -8,7 +8,8 @@
   "background_color": "#0b0f0d",
   "theme_color": "#0b0f0d",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/brand/wolf-logo.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/icons/parole-icon-192-v2.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/parole-icon-512-v2.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/parole-maskable-512-v2.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
