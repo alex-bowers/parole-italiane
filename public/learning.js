@@ -46,7 +46,7 @@ export function buildSentenceOptions(sentence, otherSentences, random = Math.ran
     .filter((text) => /[\p{L}\p{N}]/u.test(text))
     .map((text, index) => ({
       id: `correct-${index}`,
-      text,
+      text: text.toLocaleLowerCase("it"),
       correct: true,
     }));
   const answerWords = new Set(correct.map((token) => normalize(token.text)).filter(Boolean));
@@ -60,7 +60,7 @@ export function buildSentenceOptions(sentence, otherSentences, random = Math.ran
   });
   const distractors = candidates.slice(0, correct.length).map((text, index) => ({
     id: `distractor-${index}`,
-    text,
+    text: text.toLocaleLowerCase("it"),
     correct: false,
   }));
   return shuffle([...correct, ...distractors], random);
