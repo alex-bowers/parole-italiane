@@ -61,8 +61,17 @@ test("sentence options omit punctuation", () => {
     () => 0.5,
   );
   const correct = options.filter((token) => token.correct).map((token) => token.text);
-  assert.deepEqual(correct.sort(), ["Dov'è", "Sì", "l'acqua"].sort());
+  assert.deepEqual(correct.sort(), ["dov'è", "sì", "l'acqua"].sort());
   assert.ok(options.every((token) => /[\p{L}\p{N}]/u.test(token.text)));
+});
+
+test("sentence options are all lowercase so capitalisation is not a giveaway", () => {
+  const options = buildSentenceOptions(
+    "Io sono Marco.",
+    ["Tu bevi acqua.", "La casa è grande."],
+    () => 0.5,
+  );
+  assert.ok(options.every((token) => token.text === token.text.toLocaleLowerCase("it")));
 });
 
 test("transcript matching uses normalised text", () => {
